@@ -42,3 +42,7 @@ next-env.d.ts
 
 # Backup directory
 backup_src/
+
+/node_modules
+
+node_modules/
