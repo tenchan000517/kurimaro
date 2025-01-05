@@ -7,7 +7,6 @@ import StatsPanel from '@/components/stamp/StatsPanel';
 import { facilities, visitedFacilities } from '@/lib/testData';
 import { getCurrentUser, isGuestUser } from '@/lib/user';
 import { isWithinRange, GEOLOCATION_OPTIONS, getLocationErrorMessage } from '@/lib/location';
-import LocationDetector from '@/components/stamp/LocationDetector';
 
 function StampPage() {
   const [stamps, setStamps] = useState(visitedFacilities);
@@ -59,40 +58,18 @@ function StampPage() {
     )];
   }, []);
 
-  useEffect(() => {
-    console.log('[StampPage] detectedFacility updated:', detectedFacility);
-  }, [detectedFacility]);
-
   const handleFacilitySelect = useCallback(async (facility) => {
-    // try {
-    //   setError(null);
-    //   console.log('Selected facility:', facility);
-    //   console.log('Detected facility:', detectedFacility);  // デバッグ用
-
-    //   // ゲストモードで既に固定データにある場合はスキップ
-    //   const existingFixedStamp = visitedFacilities.find(s => s.facilityId === facility.id);
-    //   if (guestMode && existingFixedStamp) {
-    //     console.log('固定スタンプが存在するためスキップします');
-    //     return;
-    //   }
-
-    //   // 既に検出済みの施設と選択された施設が一致するか確認
-    //   if (!detectedFacility || detectedFacility.id !== facility.id) {
-    //     throw new Error(`施設「${facility.name}」の近くまで移動してください`);
-    //   }
-
     try {
       setError(null);
-      console.log('[StampPage] Selected facility:', {
-        id: facility.id,
-        name: facility.name,
-        latitude: facility.latitude,
-        longitude: facility.longitude
-      });
-      console.log('[StampPage] Current detectedFacility:', detectedFacility);
 
-      console.log('[StampPage] Stamp image path:', facility.stampImage);
+      // ゲストモードで既に固定データにある場合はスキップ
+      const existingFixedStamp = visitedFacilities.find(s => s.facilityId === facility.id);
+      if (guestMode && existingFixedStamp) {
+        console.log('固定スタンプが存在するためスキップします');
+        return;
+      }
 
+      // 既に検出済みの施設と選択された施設が一致するか確認
       if (!detectedFacility || detectedFacility.id !== facility.id) {
         throw new Error(`施設「${facility.name}」の近くまで移動してください`);
       }
@@ -115,7 +92,7 @@ function StampPage() {
       setShowModal(true);
       setStampData(newStamp);
       setError(null);
-      // setDetectedFacility(null);
+      setDetectedFacility(null);
 
     } catch (error) {
       console.error('Stamp obtaining error:', {
@@ -129,11 +106,6 @@ function StampPage() {
     }
   }, [guestMode, stamps.length, handleStampObtain, detectedFacility]);
 
-  const handleFacilityDetected = useCallback((facility) => {
-    console.log('[StampPage] Detected facility:', facility);
-    setDetectedFacility(facility);
-  }, []);
-
   useEffect(() => {
     const isGuest = isGuestUser();
     console.log('ゲストモード:', isGuest);
@@ -146,11 +118,6 @@ function StampPage() {
 
   return (
     <div className="p-4 max-w-screen-xl mx-auto space-y-4">
-      {/* 3. LocationDetectorを追加 */}
-      <LocationDetector
-        facilities={facilities}
-        onFacilityDetected={handleFacilityDetected}
-      />
       {error && (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
           <span className="block sm:inline">{error}</span>
@@ -203,7 +170,6 @@ function StampPage() {
             facilities={facilities}
             visitedFacilities={stamps}
             onFacilitySelect={handleFacilitySelect}
-            detectedFacility={detectedFacility}  // 追加
           />
         ) : (
           <StatsPanel

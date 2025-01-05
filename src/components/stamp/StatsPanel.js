@@ -6,12 +6,12 @@ function StatsPanel({ visitCount, completionRate }) {
     {
       label: '来店回数',
       value: visitCount,
-      description: '楽しい思い出をありがとう！',
+      // description: '楽しい思い出をありがとう！',
     },
     {
       label: 'コンプリート状況',
       value: `${completionRate}%`,
-      description: 'がんばってコレクションしよう！',
+      // description: 'がんばってコレクションしよう！',
     }
   ];
 

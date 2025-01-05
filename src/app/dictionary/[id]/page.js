@@ -1,5 +1,3 @@
-
-
 // app/dictionary/[id]/page.js
 'use client';
 

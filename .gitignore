@@ -46,3 +46,8 @@ backup_src/
 /node_modules
 
 node_modules/
+.vercel
+
+/version
+
+version/
